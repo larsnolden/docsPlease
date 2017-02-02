@@ -3,7 +3,7 @@ var Bot = require('slackbots');
 
 // create Bot
 var settings = {
-    token: 'xoxb-134221967394-TeICmxJGKkVb8MkU0YtrG8z0',
+    token: '**',
     name: 'Boble'
 } 
 
