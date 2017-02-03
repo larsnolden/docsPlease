@@ -34,9 +34,11 @@ function extractText(body) {
     var res = {}
     body = cheerio.load(body);
     res.text = body('p', '#wikiArticle').text();
-    res.code = body('code', '#wikiArticle').text();
+    res.code = body('pre', '#wikiArticle').first().text();
     return res;
 }
+
+//[class*=language-]
 
 //returns Article link from body
 function extractLink(body) {
@@ -44,4 +46,4 @@ function extractLink(body) {
     return body('a[tabindex=1]', '.result-1').attr('href');
 }
 
-module.exports = getInfoOn; 
+module.exports.getInfoOn = getInfoOn; 

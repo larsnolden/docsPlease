@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "botkit": "^0.4.10",
     "cheerio": "^0.22.0",
     "node-jsdom": "^3.1.5",
     "request": "^2.79.0",
