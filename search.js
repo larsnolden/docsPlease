@@ -2,17 +2,12 @@ const cheerio = require('cheerio');
 const request = require('request');
 const baseUrl = 'https://developer.mozilla.org/en-US/search?q=';
 
-// returns info from the mozilla developer network (MDN) doc'sample
-// Arguments:  searchterm
-// Return Value:  a Promise that resolves to |object.text: description | object.code: code sample|
-// usage:  getInfoOn('Array').then(res => console.log(res))
-
 // main: returns desc. and codesample
 var getInfoOn = function(term) {
     return new Promise(function(resolve, reject) {
         request.getBody(baseUrl + term).then(function(body) {
             let articleLink = extractLink(body);
-                request.getBody(articleLink).then(body => resolve(extractText(body)));
+                request.getBody(articleLink).then(body => resolve(extractInfo(body)));
         })
     })
 }
@@ -30,13 +25,15 @@ request.getBody = function (url) {
 }
 
 // returns Text and Code sample from HTML body
-function extractText(body) {
+function extractInfo(body) {
     var res = {}
     body = cheerio.load(body);
     res.text = body('p', '#wikiArticle').text();
     res.code = body('pre', '#wikiArticle').first().text();
+    res.title = body('h1').first().text();
     return res;
 }
+//add title search
 
 //[class*=language-]
 
