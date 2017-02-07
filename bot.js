@@ -1,7 +1,7 @@
 const Search = require('./search.js')
 const Botkit = require('botkit')
 
-var token = 'xoxb...';
+var token = 'xoxb';
 
 var controller = Botkit.slackbot({
     debug: true
@@ -12,12 +12,14 @@ var bot = controller.spawn({
 }).startRTM();
 
 controller.on('direct_message,direct_mention,mention', function(bot, message) {
-    bot.startConversation(message, function(err, convo) {
-        Search.getInfoOn(message.text).then(res => {
-            createSnippet(res.title, res.code, message.channel).then(convo.next());
-            convo.say(res.text);
-        });
-    }) 
+    Search.getInfoOn(message.text).then(res => {
+        createSnippet(res.title, res.code, message.channel);
+        listen(res);
+    })
+
+    var listen = function(res) {
+        controller.hears(['more'], 'ambient', x => bot.reply(message, res.text))
+    }
 })
 
 controller.hears(['derda'], 'ambient', function(bot, message) {

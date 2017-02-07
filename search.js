@@ -7,7 +7,7 @@ var getInfoOn = function(term) {
     return new Promise(function(resolve, reject) {
         request.getBody(baseUrl + term).then(function(body) {
             let articleLink = extractLink(body);
-                request.getBody(articleLink).then(body => resolve(extractInfo(body)));
+                request.getBody(articleLink).then(body => resolve(extractInfo(body, articleLink)));
         })
     })
 }
@@ -25,17 +25,18 @@ request.getBody = function (url) {
 }
 
 // returns Text and Code sample from HTML body
-function extractInfo(body) {
+function extractInfo(body, articleLink) {
     var res = {}
     body = cheerio.load(body);
-    res.text = body('p', '#wikiArticle').text();
+    {
+        let text = body('p', '#wikiArticle').text();
+        if(text > 750) text = text.slice(0,750);
+        res.text = text + '  ' + articleLink;
+    }
     res.code = body('pre', '#wikiArticle').first().text();
     res.title = body('h1').first().text();
     return res;
 }
-//add title search
-
-//[class*=language-]
 
 //returns Article link from body
 function extractLink(body) {
